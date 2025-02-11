@@ -8,12 +8,12 @@ public class Income {
     private Date dateEarned;
     private String category;
 
-    public Income(Date dateEarned, double amount, String title, int incomeID, String category) {
-        this.dateEarned = dateEarned;
-        this.amount = amount;
-        this.title = title;
+    public Income(int incomeID, String title, String category, double amount, Date dateEarned) {
         this.incomeID = incomeID;
+        this.title = title;
         this.category = category;
+        this.amount = amount;
+        this.dateEarned = dateEarned;
     }
 
     public int getIncomeID() {
