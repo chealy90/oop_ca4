@@ -65,4 +65,30 @@ public class MySQLExpenseDao extends MySQLDao implements MySQLDaoInterface {
 
         return expense;
     }
+
+    public void createNew(Object newItem){
+        Expense newExpense = (Expense) newItem;
+
+        try {
+            Connection conn = getConnection();
+            String query = "INSERT INTO expense VALUES (NULL, ?, ?, ?, ?);";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, newExpense.getTitle());
+            ps.setString(2, newExpense.getCategory());
+            ps.setDouble(3, newExpense.getAmount());
+            ps.setDate(4, newExpense.getDateIncurred());
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected!=1){
+                System.out.println("---Could not write to the database.---");
+            } else {
+                System.out.println("---Added record to table 'expense'.---");
+            }
+        }
+        catch(SQLException e){
+            System.out.println("---Error creating record in 'expense'.---" );
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 }

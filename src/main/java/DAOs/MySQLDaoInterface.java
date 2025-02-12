@@ -8,4 +8,6 @@ public interface MySQLDaoInterface {
 
     public Object findByID(int id);
 
+    public void createNew(Object newItem);
+
 }

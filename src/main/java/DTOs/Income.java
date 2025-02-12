@@ -2,13 +2,14 @@ package DTOs;
 import java.sql.Date;
 
 public class Income {
-    private int incomeID;
+    //must use Integer wrapper class to allow null value for ID
+    private Integer incomeID;
     private String title;
     private double amount;
     private Date dateEarned;
     private String category;
 
-    public Income(int incomeID, String title, String category, double amount, Date dateEarned) {
+    public Income(Integer incomeID, String title, String category, double amount, Date dateEarned) {
         this.incomeID = incomeID;
         this.title = title;
         this.category = category;

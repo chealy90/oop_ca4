@@ -70,4 +70,30 @@ public class MySQLIncomeDao extends MySQLDao implements MySQLDaoInterface{
         return income;
         
     }
+
+    public void createNew(Object newItem){
+        Income newIncome = (Income) newItem;
+
+        try {
+            Connection conn = getConnection();
+            String query = "INSERT INTO income VALUES (NULL, ?, ?, ?, ?);";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, newIncome.getTitle());
+            ps.setString(2, newIncome.getCategory());
+            ps.setDouble(3, newIncome.getAmount());
+            ps.setDate(4, newIncome.getDateEarned());
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected!=1){
+                System.out.println("---Could not write to the database.---");
+            } else {
+                System.out.println("---Added record to table 'income'.---");
+            }
+        }
+        catch(SQLException e){
+            System.out.println("---Error creating record in 'income'.---" );
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 }

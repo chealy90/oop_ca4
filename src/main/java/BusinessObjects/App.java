@@ -5,6 +5,7 @@ import DAOs.MySQLIncomeDao;
 import DTOs.Expense;
 import DTOs.Income;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -36,11 +37,17 @@ public class App {
                 case 4:
                     findExpenseByID();
                     break;
+                case 5:
+                    addNewIncome();
+                    break;
+                case 6:
+                    addNewExpense();
+                    break;
 
 
             }
 
-        } while (choice!=7);
+        } while (choice!=8);
     }
 
     public int getMenuChoice(){
@@ -48,6 +55,8 @@ public class App {
         System.out.println("2) Display all expenses");
         System.out.println("3) Find an income by ID number.");
         System.out.println("4) Find an expense by ID number");
+        System.out.println("5) Add a new income.");
+        System.out.println("6) Add a new expense.");
 
 
         System.out.print("Your choice:");
@@ -168,6 +177,56 @@ public class App {
                     expense.getDateIncurred().toString());
             System.out.println("--------------------------------------------------------------------------------------------");
         }
+    }
+
+    public void addNewIncome(){
+        Scanner kb = new Scanner(System.in);
+        MySQLIncomeDao incomeDAO = new MySQLIncomeDao();
+
+        String title;
+        String category;
+        double amount;
+        String dateString;
+        Date date;
+
+        System.out.print("---Enter income title:");
+        title = kb.nextLine();
+        System.out.print("---Enter income category:");
+        category = kb.nextLine();
+        System.out.print("---Enter income amount:");
+        amount = kb.nextDouble();
+        kb.nextLine();
+        System.out.println("---Enter date earned (yyyy-mm-dd):");
+        dateString = kb.nextLine();
+        date = Date.valueOf(dateString);
+
+        Income newIncome = new Income(null, title, category, amount, date);
+        incomeDAO.createNew(newIncome);
+    }
+
+    public void addNewExpense(){
+        Scanner kb = new Scanner(System.in);
+        MySQLExpenseDao expenseDAO = new MySQLExpenseDao();
+
+        String title;
+        String category;
+        double amount;
+        String dateString;
+        Date date;
+
+        System.out.print("---Enter expense title:");
+        title = kb.nextLine();
+        System.out.print("---Enter expense category:");
+        category = kb.nextLine();
+        System.out.print("---Enter expense amount:");
+        amount = kb.nextDouble();
+        kb.nextLine();
+        System.out.print("---Enter date incurred (yyyy-mm-dd):");
+        dateString = kb.nextLine();
+        date = Date.valueOf(dateString);
+
+        Expense newExpense = new Expense(null, title, category, amount, date);
+        expenseDAO.createNew(newExpense);
     }
 
 

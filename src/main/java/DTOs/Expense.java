@@ -2,13 +2,14 @@ package DTOs;
 import java.sql.Date;
 
 public class Expense {
-    private int expenseID;
+    //must use Integer wrapper class to allow null value for ID
+    private Integer expenseID;
     private String title;
     private String category;
     private double amount;
     private Date dateIncurred;
 
-    public Expense(int expenseID, String title, String category, double amount, Date dateIncurred) {
+    public Expense(Integer expenseID, String title, String category, double amount, Date dateIncurred) {
         this.expenseID = expenseID;
         this.title = title;
         this.category = category;
