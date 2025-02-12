@@ -13,7 +13,7 @@ public class MySQLDao {
 
     public Connection getConnection(){
         String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/ca4_budget_app";
+        String url = "jdbc:mysql://localhost:3306/oop_ca4_christopher_healy";
         String username = "root";
         String password = "";
         Connection conn = null;

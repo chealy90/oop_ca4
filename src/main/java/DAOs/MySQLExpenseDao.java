@@ -12,7 +12,7 @@ public class MySQLExpenseDao extends MySQLDao implements MySQLDaoInterface {
         try {
             //carry out query on DB
             Connection conn = getConnection();
-            String query = "SELECT * FROM expenses;";
+            String query = "SELECT * FROM expense;";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 

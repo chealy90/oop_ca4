@@ -14,7 +14,7 @@ public class MySQLIncomeDao extends MySQLDao implements MySQLDaoInterface{
         try {
             //carry out query
             Connection conn = getConnection();
-            String query = "SELECT * FROM incomes;";
+            String query = "SELECT * FROM income;";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
