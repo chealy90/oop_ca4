@@ -1,5 +1,4 @@
 package DAOs;
-import DTOs.Expense;
 import DTOs.Income;
 
 import java.sql.*;
@@ -40,26 +39,15 @@ public class MySQLIncomeDao extends MySQLDao implements MySQLDaoInterface{
 
     }
 
-    public Income findByID(int id){
-        Income income = null;
-
-
+    public int deleteByID(int id){
         try {
             Connection conn = getConnection();
-            String query = "SELECT * FROM income WHERE incomeID = ?";
+            String query = "DELETE FROM income WHERE incomeID = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
+            int rowsAffected = ps.executeUpdate();
 
-            while (rs.next()){
-                int incomeID = rs.getInt(1);
-                String title = rs.getString(2);
-                String category = rs.getString(3);
-                double amount = rs.getDouble(4);
-                Date dateEarned = rs.getDate(5);
-
-                income = new Income(incomeID, title, category, amount, dateEarned);
-            }
+            return rowsAffected;
         }
         catch (SQLException e){
             System.out.println("Error reading from database.");
@@ -67,7 +55,7 @@ public class MySQLIncomeDao extends MySQLDao implements MySQLDaoInterface{
             System.exit(1);
         }
 
-        return income;
+        return 0;
         
     }
 

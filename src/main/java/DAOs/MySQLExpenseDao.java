@@ -35,35 +35,22 @@ public class MySQLExpenseDao extends MySQLDao implements MySQLDaoInterface {
         return expenses;
     }
 
-    public Expense findByID(int id){
-        Expense expense = null;
+    public int deleteByID(int id){
         try {
             //carry out query
             Connection conn = getConnection();
-            String query = "SELECT * FROM expense WHERE expenseID = ?";
+            String query = "DELETE FROM expense WHERE expenseID = ?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            //create expense object
-            while (rs.next()){
-                int expenseID = rs.getInt(1);
-                String title = rs.getString(2);
-                String category = rs.getString(3);
-                double amount = rs.getDouble(4);
-                Date dateIncurred = rs.getDate(5);
-
-                expense = new Expense(expenseID, title, category, amount, dateIncurred);
-            }
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected;
         }
         catch (SQLException e){
             System.out.println("Error reading from database:");
             e.printStackTrace();
             System.exit(1);
         }
-
-
-        return expense;
+        return 0;
     }
 
     public void createNew(Object newItem){

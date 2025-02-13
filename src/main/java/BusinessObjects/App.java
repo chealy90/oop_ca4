@@ -6,7 +6,6 @@ import DTOs.Expense;
 import DTOs.Income;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,10 +31,10 @@ public class App {
                     displayAllExpenses();
                     break;
                 case 3:
-                    findIncomeByID();
+                    deleteIncomeByID();
                     break;
                 case 4:
-                    findExpenseByID();
+                    deleteExpenseByID();
                     break;
                 case 5:
                     addNewIncome();
@@ -53,8 +52,8 @@ public class App {
     public int getMenuChoice(){
         System.out.println("1) Display all incomes.");
         System.out.println("2) Display all expenses");
-        System.out.println("3) Find an income by ID number.");
-        System.out.println("4) Find an expense by ID number");
+        System.out.println("3) Delete an income by ID number.");
+        System.out.println("4) Delete an expense by ID number");
         System.out.println("5) Add a new income.");
         System.out.println("6) Add a new expense.");
 
@@ -128,7 +127,7 @@ public class App {
 
     }
 
-    public void findIncomeByID(){
+    public void deleteIncomeByID(){
         Scanner kb = new Scanner(System.in);
         MySQLIncomeDao incomeDAO = new MySQLIncomeDao();
 
@@ -136,25 +135,16 @@ public class App {
         int inputtedID = kb.nextInt();
         kb.nextLine();
 
-        Income income = incomeDAO.findByID(inputtedID);
-        if (income==null){
-            System.out.println("---Income with ID " + inputtedID + " not found.---");
+        int rowsAffected = incomeDAO.deleteByID(inputtedID);
+        if (rowsAffected != 0) {
+            System.out.println("---Record with ID '" + inputtedID + "' deleted.");
         } else {
-            System.out.println("Result:");
-            System.out.println("--------------------------------------------------------------------------------------------");
-            System.out.printf("%5s%20s%20s%20s%20s\n", "ID", "Title", "Category", "Amount", "Date Earned");
-            System.out.println("--------------------------------------------------------------------------------------------");
-            System.out.printf("%5d%20s%20s%20.2f%20s\n", income.getIncomeID(),
-                    income.getTitle(),
-                    income.getCategory(),
-                    income.getAmount(),
-                    income.getDateEarned().toString());
-            System.out.println("--------------------------------------------------------------------------------------------");
+            System.out.println("---Record with ID '" + inputtedID + "' not found.");
         }
     }
 
 
-    public void findExpenseByID(){
+    public void deleteExpenseByID(){
         Scanner kb = new Scanner(System.in);
         MySQLExpenseDao expenseDAO = new MySQLExpenseDao();
 
@@ -162,20 +152,11 @@ public class App {
         int inputtedID = kb.nextInt();
         kb.nextLine();
 
-        Expense expense = expenseDAO.findByID(inputtedID);
-        if (expense==null){
-            System.out.println("---Expense with ID " + inputtedID + " not found.---");
+        int rowsAffected = expenseDAO.deleteByID(inputtedID);
+        if (rowsAffected != 0) {
+            System.out.println("---Record with ID '" + inputtedID + "' deleted.");
         } else {
-            System.out.println("Result:");
-            System.out.println("--------------------------------------------------------------------------------------------");
-            System.out.printf("%5s%20s%20s%20s%20s\n", "ID", "Title", "Category", "Amount", "Date Incurred");
-            System.out.println("--------------------------------------------------------------------------------------------");
-            System.out.printf("%5d%20s%20s%20.2f%20s\n", expense.getExpenseID(),
-                    expense.getTitle(),
-                    expense.getCategory(),
-                    expense.getAmount(),
-                    expense.getDateIncurred().toString());
-            System.out.println("--------------------------------------------------------------------------------------------");
+            System.out.println("---Record with ID '" + inputtedID + "' not found.");
         }
     }
 
