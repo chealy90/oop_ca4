@@ -119,7 +119,7 @@ public class App {
 
         //show total
         System.out.printf("%80s\n", "------------------");
-        System.out.printf("%80s\n", "Total: €" + total);
+        System.out.printf("%80s\n", "Total: €" + String.format("%.2f", total));
         System.out.printf("%80s\n", "------------------");
 
         return total;
@@ -177,15 +177,15 @@ public class App {
 
         //total
         System.out.printf("%80s|  %80s\n", "------------------", "------------------");
-        System.out.printf("%80s|  %80s\n", "Total: €" + incomeTotal + "  ", "Total: €" + expenseTotal);
+        System.out.printf("%80s|  %80s\n", "Total: €" + String.format("%.2f", incomeTotal) + "  ", "Total: €" + String.format("%.2f", expenseTotal));
         System.out.printf("%80s|  %80s\n", "------------------", "------------------");
 
         //summary
         double leftOver = incomeTotal - expenseTotal;
         System.out.println("-----SUMMARY-----");
-        System.out.println("Total income earned: €" + incomeTotal);
-        System.out.println("Total expenses incurred: €" + expenseTotal);
-        System.out.println("Leftover at end of month: €" + leftOver);
+        System.out.println("Total income earned: €" + String.format("%.2f", incomeTotal));
+        System.out.println("Total expenses incurred: €" + String.format("%.2f", expenseTotal));
+        System.out.println("Leftover at end of month: €" + String.format("%.2f", leftOver));
         System.out.println("-----------------");
         System.out.println();
 
