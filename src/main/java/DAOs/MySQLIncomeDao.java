@@ -1,4 +1,5 @@
 package DAOs;
+import DTOs.Expense;
 import DTOs.Income;
 
 import java.sql.*;
@@ -83,5 +84,38 @@ public class MySQLIncomeDao extends MySQLDao implements MySQLDaoInterface{
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public List findByMonth(int month){
+        List<Income> incomes = new ArrayList<>();
+
+        try{
+            //carry out query
+            Connection conn = getConnection();
+            String query = "SELECT * FROM income WHERE MONTH(dateEarned) = ?;";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, month);
+            ResultSet rs = ps.executeQuery();
+
+            //generate list
+            while (rs.next()){
+                Income income = new Income(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getDate(5));
+
+                incomes.add(income);
+            }
+
+            return incomes;
+        }
+        catch (SQLException e){
+            System.out.println("---Error reading from database:");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return incomes;
     }
 }

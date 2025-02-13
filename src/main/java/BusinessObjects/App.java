@@ -6,6 +6,7 @@ import DTOs.Expense;
 import DTOs.Income;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -42,6 +43,12 @@ public class App {
                 case 6:
                     addNewExpense();
                     break;
+                case 7:
+                    examineByMonth();
+                    break;
+                default:
+                    System.out.println("Error: Please enter a valid option");
+                    break;
 
 
             }
@@ -49,13 +56,15 @@ public class App {
         } while (choice!=8);
     }
 
-    public int getMenuChoice(){
+    public static int getMenuChoice(){
+        System.out.println("---Menu---");
         System.out.println("1) Display all incomes.");
         System.out.println("2) Display all expenses");
         System.out.println("3) Delete an income by ID number.");
         System.out.println("4) Delete an expense by ID number");
         System.out.println("5) Add a new income.");
         System.out.println("6) Add a new expense.");
+        System.out.println("7) Examine income and expenses by month.");
 
 
         System.out.print("Your choice:");
@@ -66,67 +75,66 @@ public class App {
         return choice;
     }
 
-    public void displayAllIncomes(){
-        MySQLIncomeDao incomeDAO = new MySQLIncomeDao();
+    public double generateTable(List list, String className){
+        String dateHeader = className.equals("Expense") ? "Date Incurred" : "Date Earned";
         double total = 0;
-        //get all incomes
-        List<Income> incomes = incomeDAO.findAll();
 
-        //get total
-        for (Income income: incomes){
-            total += income.getAmount();
+        System.out.println(className + "s:");
+        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.printf("%5s%20s%20s%20s%20s\n", "ID", "Title", "Category", "Amount", dateHeader);
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+        //incomes
+        if (className.equals("Income")){
+            for (Object incomeObj: list) {
+                Income income = (Income) incomeObj;
+                total += income.getAmount();
+                System.out.printf("%5d%20s%20s%20.2f%20s\n", income.getIncomeID(),
+                                income.getTitle(),
+                                income.getCategory(),
+                                income.getAmount(),
+                                income.getDateEarned().toString());
+            }
+        }
+        //expenses
+        else {
+            for (Object expenseObj: list) {
+                Expense expense = (Expense) expenseObj;
+                total += expense.getAmount();
+                System.out.printf("%5d%20s%20s%20.2f%20s\n", expense.getExpenseID(),
+                        expense.getTitle(),
+                        expense.getCategory(),
+                        expense.getAmount(),
+                        expense.getDateIncurred().toString());
+            }
         }
 
-        //display table
-        System.out.println("Incomes:");
-        System.out.println("--------------------------------------------------------------------------------------------");
-        System.out.printf("%5s%20s%20s%20s%20s\n", "ID", "Title", "Category", "Amount", "Date Earned");
-        System.out.println("--------------------------------------------------------------------------------------------");
-        for (Income income: incomes){
-            System.out.printf("%5d%20s%20s%20.2f%20s\n", income.getIncomeID(),
-                                                        income.getTitle(),
-                                                        income.getCategory(),
-                                                        income.getAmount(),
-                                                        income.getDateEarned().toString());
-        }
+        //show total
         System.out.println("--------------");
         System.out.println("Total: €" + total);
         System.out.println("--------------");
 
-
+        return total;
     }
 
+
+    //show all methods
+    public void displayAllIncomes(){
+        MySQLIncomeDao incomeDAO = new MySQLIncomeDao();
+        //get all incomes
+        List<Income> incomes = incomeDAO.findAll();
+        generateTable(incomes, "Income");
+    }
 
     public void displayAllExpenses(){
         MySQLExpenseDao expenseDAO = new MySQLExpenseDao();
-        double total = 0;
-        //get all incomes
         List<Expense> expenses = expenseDAO.findAll();
-
-        //get total
-        for (Expense expense: expenses){
-            total += expense.getAmount();
-        }
-
-        //display table
-        System.out.println("Expenses:");
-        System.out.println("--------------------------------------------------------------------------------------------");
-        System.out.printf("%5s%20s%20s%20s%20s\n", "ID", "Title", "Category", "Amount", "Date Incurred");
-        System.out.println("--------------------------------------------------------------------------------------------");
-        for (Expense expense: expenses){
-            System.out.printf("%5d%20s%20s%20.2f%20s\n", expense.getExpenseID(),
-                    expense.getTitle(),
-                    expense.getCategory(),
-                    expense.getAmount(),
-                    expense.getDateIncurred().toString());
-        }
-        System.out.println("--------------");
-        System.out.println("Total: €" + total);
-        System.out.println("--------------");
-
-
+        generateTable(expenses, "Expense");
     }
 
+
+
+    //delete methods
     public void deleteIncomeByID(){
         Scanner kb = new Scanner(System.in);
         MySQLIncomeDao incomeDAO = new MySQLIncomeDao();
@@ -143,7 +151,6 @@ public class App {
         }
     }
 
-
     public void deleteExpenseByID(){
         Scanner kb = new Scanner(System.in);
         MySQLExpenseDao expenseDAO = new MySQLExpenseDao();
@@ -159,6 +166,8 @@ public class App {
             System.out.println("---Record with ID '" + inputtedID + "' not found.");
         }
     }
+
+    //create new methods
 
     public void addNewIncome(){
         Scanner kb = new Scanner(System.in);
@@ -177,7 +186,7 @@ public class App {
         System.out.print("---Enter income amount:");
         amount = kb.nextDouble();
         kb.nextLine();
-        System.out.println("---Enter date earned (yyyy-mm-dd):");
+        System.out.print("---Enter date earned (yyyy-mm-dd):");
         dateString = kb.nextLine();
         date = Date.valueOf(dateString);
 
@@ -209,6 +218,23 @@ public class App {
         Expense newExpense = new Expense(null, title, category, amount, date);
         expenseDAO.createNew(newExpense);
     }
+
+
+    //analyse methods
+    public void examineByMonth(){
+        Scanner kb = new Scanner(System.in);
+        MySQLIncomeDao incomeDAO = new MySQLIncomeDao();
+        MySQLExpenseDao expenseDAO = new MySQLExpenseDao();
+
+        System.out.print("Enter month number:");
+        int month = kb.nextInt();
+
+        List<Income> incomes = incomeDAO.findByMonth(month);
+        List<Expense> expenses = expenseDAO.findByMonth(month);
+    }
+
+
+
 
 
 }

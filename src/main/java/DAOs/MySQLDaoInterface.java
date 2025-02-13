@@ -10,4 +10,6 @@ public interface MySQLDaoInterface {
 
     public void createNew(Object newItem);
 
+    public List findByMonth(int month);
+
 }
