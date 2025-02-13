@@ -16,7 +16,6 @@ public class App {
         app.start();
     }
 
-
     public void start(){
         System.out.println("---Budget Manager---");
         int choice = 0;
@@ -46,6 +45,9 @@ public class App {
                 case 7:
                     examineByMonth();
                     break;
+                case 8:
+                    System.out.println("---Thank you for using the Budget Manager application.---");
+                    break;
                 default:
                     System.out.println("Error: Please enter a valid option");
                     break;
@@ -59,12 +61,13 @@ public class App {
     public static int getMenuChoice(){
         System.out.println("---Menu---");
         System.out.println("1) Display all incomes.");
-        System.out.println("2) Display all expenses");
+        System.out.println("2) Display all expenses.");
         System.out.println("3) Delete an income by ID number.");
-        System.out.println("4) Delete an expense by ID number");
+        System.out.println("4) Delete an expense by ID number.");
         System.out.println("5) Add a new income.");
         System.out.println("6) Add a new expense.");
         System.out.println("7) Examine income and expenses by month.");
+        System.out.println("8) Exit.");
 
 
         System.out.print("Your choice:");
@@ -186,10 +189,6 @@ public class App {
         System.out.println("-----------------");
         System.out.println();
 
-
-
-
-
     }
 
 
@@ -310,9 +309,4 @@ public class App {
         //generate tables
         generateDualTable(incomes, expenses);
     }
-
-
-
-
-
 }
