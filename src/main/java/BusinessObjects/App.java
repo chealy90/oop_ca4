@@ -80,16 +80,21 @@ public class App {
         double total = 0;
 
         System.out.println(className + "s:");
-        System.out.println("--------------------------------------------------------------------------------------------");
-        System.out.printf("%5s%20s%20s%20s%20s\n", "ID", "Title", "Category", "Amount", dateHeader);
-        System.out.println("--------------------------------------------------------------------------------------------");
+        for (int i=0;i<80;i++){System.out.print("-");};
+        System.out.println();
+
+        System.out.printf("%-5s%-20s%-20s%-20s%-15s\n", "ID", "Title", "Category", "Amount", dateHeader);
+
+        for (int i=0;i<80;i++){System.out.print("-");};
+        System.out.println();
+
 
         //incomes
         if (className.equals("Income")){
             for (Object incomeObj: list) {
                 Income income = (Income) incomeObj;
                 total += income.getAmount();
-                System.out.printf("%5d%20s%20s%20.2f%20s\n", income.getIncomeID(),
+                System.out.printf("%-5d%-20s%-20s%-20.2f%-15s\n", income.getIncomeID(),
                                 income.getTitle(),
                                 income.getCategory(),
                                 income.getAmount(),
@@ -101,7 +106,7 @@ public class App {
             for (Object expenseObj: list) {
                 Expense expense = (Expense) expenseObj;
                 total += expense.getAmount();
-                System.out.printf("%5d%20s%20s%20.2f%20s\n", expense.getExpenseID(),
+                System.out.printf("%-5d%-20s%-20s%-20.2f%-15s\n", expense.getExpenseID(),
                         expense.getTitle(),
                         expense.getCategory(),
                         expense.getAmount(),
@@ -110,11 +115,81 @@ public class App {
         }
 
         //show total
-        System.out.println("--------------");
-        System.out.println("Total: €" + total);
-        System.out.println("--------------");
+        System.out.printf("%80s\n", "------------------");
+        System.out.printf("%80s\n", "Total: €" + total);
+        System.out.printf("%80s\n", "------------------");
 
         return total;
+    }
+
+    public void generateDualTable(List incomes, List expenses){
+        double incomeTotal = 0;
+        double expenseTotal = 0;
+
+        //titles
+        for (int i=0;i<82 + 80;i++){System.out.print("-");}
+        System.out.println();
+        System.out.printf("%-80s|  %-80s\n", "Income", "Expenses");
+        //need to find out which of the tables is longer first
+        int maxLength = Math.max(incomes.size(), expenses.size());
+
+        //headers
+        for (int i=0;i<82 + 80;i++){System.out.print("-");}
+        System.out.println();
+
+        System.out.printf("%-5s%-20s%-20s%-20s%-15s|  ", "ID", "Title", "Category", "Amount", "Date Earned");
+        System.out.printf("%-5s%-20s%-20s%-20s%-15s\n", "ID", "Title", "Category", "Amount", "Date Incurred");
+
+        for (int i=0;i<82 + 80;i++){System.out.print("-");}
+        System.out.println();
+
+        //table data
+        for (int i=0;i<maxLength;i++){
+            //incomes
+            if (i<incomes.size()){
+                Income income = (Income) incomes.get(i);
+                incomeTotal += income.getAmount();
+                System.out.printf("%-5d%-20s%-20s%-20.2f%-15s|  ", income.getIncomeID(),
+                        income.getTitle(),
+                        income.getCategory(),
+                        income.getAmount(),
+                        income.getDateEarned().toString());
+            } else {
+                System.out.printf("%80s|  ", "");
+            }
+
+            //expenses
+            if (i<expenses.size()){
+                Expense expense = (Expense) expenses.get(i);
+                expenseTotal += expense.getAmount();
+                System.out.printf("%-5d%-20s%-20s%-20.2f%-15s\n", expense.getExpenseID(),
+                        expense.getTitle(),
+                        expense.getCategory(),
+                        expense.getAmount(),
+                        expense.getDateIncurred().toString());
+            } else {
+                System.out.println();
+            }
+        }
+
+        //total
+        System.out.printf("%80s|  %80s\n", "------------------", "------------------");
+        System.out.printf("%80s|  %80s\n", "Total: €" + incomeTotal + "  ", "Total: €" + expenseTotal);
+        System.out.printf("%80s|  %80s\n", "------------------", "------------------");
+
+        //summary
+        double leftOver = incomeTotal - expenseTotal;
+        System.out.println("-----SUMMARY-----");
+        System.out.println("Total income earned: €" + incomeTotal);
+        System.out.println("Total expenses incurred: €" + expenseTotal);
+        System.out.println("Leftover at end of month: €" + leftOver);
+        System.out.println("-----------------");
+        System.out.println();
+
+
+
+
+
     }
 
 
@@ -231,6 +306,9 @@ public class App {
 
         List<Income> incomes = incomeDAO.findByMonth(month);
         List<Expense> expenses = expenseDAO.findByMonth(month);
+
+        //generate tables
+        generateDualTable(incomes, expenses);
     }
 
 
